@@ -1,0 +1,29 @@
+{
+  "n_cases": 300,
+  "actions": [
+    "fraud",
+    "disputes",
+    "cards",
+    "payments",
+    "fees",
+    "account"
+  ],
+  "per_group": 50,
+  "seed": 7,
+  "delay": {
+    "fraud": 60,
+    "disputes": 25,
+    "payments": 18,
+    "cards": 12,
+    "fees": 7,
+    "account": 5
+  },
+  "handling": {
+    "fraud": 30,
+    "disputes": 20,
+    "payments": 14,
+    "cards": 12,
+    "fees": 9,
+    "account": 8
+  }
+}
