@@ -192,13 +192,13 @@ change, 12.3\% of decisions changed, and the accuracy test says it is noise
 
 \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} is the quiet one: accuracy moves
 by less than 2 points and is not significant ($p = 0.50$), while 19.7\% of
-decisions change, with 6.7\% of them now wrong. A team comparing these two
-models by accuracy would see no upgrade.
+decisions change, with 6.7\% regressions and 5.0\% improvements. A team
+comparing these two models by accuracy would see no upgrade.
 
 \texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b} is the loud one: accuracy rises
-by 30.7 points and 70.0\% of decisions change. Of the changed decisions,
-8.7\% went the wrong way and 39.3\% became correct where they were wrong.
-The ledger is \texttt{qwen2.5:0.5b} at \$27,607 per 1,000 decisions,
+by 30.7 points and 70.0\% of decisions change; 8.7\% of decisions go from
+correct to wrong and 39.3\% become correct where they were wrong. The ledger
+is \texttt{qwen2.5:0.5b} at \$27,607 per 1,000 decisions,
 \texttt{qwen2.5:1.5b} at \$16,643.
 
 \section{The fraud-detection agent}
@@ -210,18 +210,19 @@ the raw runs are in \texttt{out/fraud/}.
 
 \begin{table}[h]
 \centering
-\begin{tabular}{lrr}
+\begin{tabular}{lrrr}
 \toprule
-model & fraud accuracy (300) & parse fails \\
+model & overall acc (300) & fraud-case acc (50) & parse fails \\
 \midrule
-\texttt{llama3.1:8b} & 85.3\% & 0 \\
-\texttt{qwen2.5:0.5b} & 29.7\% & 0 \\
-\texttt{qwen2.5:1.5b} & 80.7\% & 0 \\
-\texttt{qwen2.5:3b} & 84.0\% & 0 \\
-\texttt{qwen2.5-coder:7b} & 89.0\% & 0 \\
+\texttt{llama3.1:8b} & 85.3\% & 32.0\% & 0 \\
+\texttt{qwen2.5:0.5b} & 29.7\% & 74.0\% & 0 \\
+\texttt{qwen2.5:1.5b} & 80.7\% & 52.0\% & 0 \\
+\texttt{qwen2.5:3b} & 84.0\% & 6.0\% & 0 \\
+\texttt{qwen2.5-coder:7b} & 89.0\% & 54.0\% & 0 \\
 \bottomrule
 \end{tabular}
-\caption{Fraud-detection accuracy of the agent, scored on all 300 cases.}
+\caption{Fraud-agent accuracy: overall over all 300 cases, and of the 50
+fraud cases.}
 \end{table}
 
 Stability of the fraud answer across models, churn against
@@ -241,11 +242,14 @@ model & churn of the fraud answer \\
 \end{tabular}
 \end{table}
 
-Reading: the 8B-class models answer fraud correctly on about 85--89\% of the
-fraud cases, and the fraud answer is stable between them (7--9\%). The 0.5B
-model is at 29.7\% and flips the fraud answer in 72\% of cases -- the same
-small-model pattern as the decision study: a model with bad accuracy also
-has a fraud answer that hardly anyone can trust.
+Reading: the fraud signal is a low-volume one. Of the 50 fraud cases,
+\texttt{llama3.1:8b} catches 16 (32\%), \texttt{qwen2.5-coder:7b} catches 27
+(54\%), \texttt{qwen2.5:1.5b} catches 26 (52\%), and \texttt{qwen2.5:0.5b}
+catches 37 (74\%). The smallest model catches the most fraud, though its
+overall accuracy is only 29.7\%. Against \texttt{llama3.1:8b}, the fraud
+answer churns in 71.7\% of cases from \texttt{qwen2.5:0.5b} and 15.3\% from
+\texttt{qwen2.5:1.5b}: a model can be a better fraud detector and a less
+stable fraud source.
 
 \section{Limitations}
 
