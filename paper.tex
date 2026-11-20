@@ -251,6 +251,14 @@ answer churns in 71.7\% of cases from \texttt{qwen2.5:0.5b} and 15.3\% from
 \texttt{qwen2.5:1.5b}: a model can be a better fraud detector and a less
 stable fraud source.
 
+\section{Code and data}
+
+The paper is reproduced from
+\url{https://github.com/slkreddy/decision-debt}. The suite, the runs, and
+the analysis live in \texttt{out/}; the harness in \texttt{src/}:
+\texttt{build\_cases.py}, \texttt{run\_eval.py}, \texttt{fraud\_eval.py},
+\texttt{analyze.py}.
+
 \section{Limitations}
 
 The suite is intent routing, not enterprise policy. The actions and the cost
