@@ -19,23 +19,22 @@ Does a model upgrade silently change business decisions that accuracy says are f
 
 Actions: `fraud`, `disputes`, `cards`, `payments`, `fees`, `account`.
 
-Cost of routing a case to the wrong team:
+Cost of routing a case to the wrong team (USD, by assumption):
 
 ```
 cost(true, pred) = delay[true] + handling[pred]        (0 if pred == true)
 ```
 
-| Action | delay | handling |
-|---|---|---|
-| fraud | 120 | 55 |
-| disputes | 45 | 35 |
-| payments | 30 | 22 |
-| cards | 20 | 18 |
-| fees | 10 | 12 |
-| account | 8 | 10 |
+| Action | Delay (USD) | Handling (USD) |
+|---|---:|---:|
+| fraud | 60 | 30 |
+| disputes | 25 | 20 |
+| payments | 18 | 14 |
+| cards | 12 | 12 |
+| fees | 7 | 9 |
+| account | 5 | 8 |
 
-The delay term makes the matrix asymmetric: missing fraud is expensive, while
-sending a fraud case to the wrong queue is only moderately costly.
+These are the parameters used by `src/build_cases.py` to generate `out/cases.jsonl` and `out/suite_meta.json`. The delay term makes the cost matrix asymmetric: the cost depends on both the true action and the predicted team. For example, misrouting a fraud case to the account team costs $68 under these assumptions, while routing an account case to fraud costs $35.
 
 ## Metrics
 
