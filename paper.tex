@@ -1,0 +1,244 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,hyperref[hidelinks]}
+
+\title{Decision Debt: A Number for Silent Decision Change Across Model Upgrades}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+An upgrade is judged by the headline number: accuracy on a fixed suite. We
+built the number that accuracy hides: how much the model changes decisions,
+and how much of that change is a regression.
+
+We route 300 cases from the BANKING77 intent set to six actions. Each case
+carries an expected cost if the wrong action is chosen. We run six models
+locally, on two routing prompts, and compare them on accuracy and on
+decision change.
+
+Two results:
+
+\begin{enumerate}
+\item \texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b}: accuracy \textbf{30.3\% to 61.0\%}
+  (a 30.7-point gain) while \textbf{71.7\%} of decisions change.
+\item \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b}: accuracy \textbf{61.0\% to 59.3\%}
+  (not significant, $p=0.50$) while \textbf{19.7\%} of decisions still change,
+  6.7\% of them wrong on both sides.
+\end{enumerate}
+
+For the second model pair, the interesting cases are the ones where the
+changed decisions go the wrong way. A team comparing those two models would
+report an upgrade that changed nothing. We report churn and regressions as
+first-class numbers, weighted by the cost they cause, per 1,000 decisions.
+\end{abstract}
+
+\section{Why accuracy is the wrong summary for an upgrade}
+
+A model turns an input into an action. The same input, run through two
+models, gives a verdict of ``same'' or ``different.'' An upgrade changes a
+decision when that verdict is ``different.'' Accuracy only looks at
+``correct'' versus ``wrong,'' and it is the average of the two: regressions
+cancel improvements. Four quantities matter, and only one of them is in every
+report.
+
+\begin{enumerate}
+\item \textbf{Churn.} The share of decisions that change between the two
+  models. A model that changes 15\% of decisions is not equivalent, even if
+  the average score is the same.
+\item \textbf{Regressions.} The share that change from correct to wrong.
+  Churn without regressions is a pure gain; churn with regressions is
+  quality that moves in both directions.
+\item \textbf{Cost-weighted churn.} The expected cost carried by the changed
+  decisions, divided by the total cost exposure of the suite, normalized.
+  Some actions cost more than others; see the cost model below.
+\item \textbf{Decision loss.} The difference of expected cost per 1,000
+  decisions between the two models. Signed: positive means the new model
+  costs more per decision on average.
+\end{enumerate}
+
+The MCNemar test applies to the accuracy side, not the decision side. On the
+upgrades below, it reports whether the accuracy change is distinguishable
+from noise. Decisions are flows, not states, so the flow rates need their
+own statistics: Wilson intervals on churn and regressions.
+
+\section{The cost model}
+
+Routing a case to the wrong action is not free, and not equally bad on every
+case. One formula and a table parameterize both sides.
+
+\begin{equation}
+\label{eq:cost}
+\text{cost}(t, p) =
+\begin{cases}
+0 & \text{if } p = t,\\
+\text{delay}[t] + \text{handling}[p] & \text{otherwise},
+\end{cases}
+\end{equation}
+
+where $t$ is the gold action and $p$ the predicted action. \texttt{delay} is
+what it costs to sit in the wrong team; \texttt{handling} is what that team
+pays to touch the case.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+action $t$ & delay & handling \\
+\midrule
+\texttt{fraud} & 60 & 30 \\
+\texttt{disputes} & 25 & 20 \\
+\texttt{payments} & 18 & 14 \\
+\texttt{cards} & 12 & 12 \\
+\texttt{fees} & 7 & 9 \\
+\texttt{account} & 5 & 8 \\
+\bottomrule
+\end{tabular}
+\caption{Cost model parameters. \texttt{fraud} to \texttt{account} costs 68;
+\texttt{account} to \texttt{fraud} costs 35. The matrix is not symmetric, so
+``wrong'' is not one number.}
+\end{table}
+
+The asymmetry is not an option. A disputed charge that the wrong team sends
+to account support costs a human to review it; an account-support case
+forwarded to fraud costs the same team's time. We take the difference as
+data and the numbers as a parameterization, not as ground truth.
+
+\section{The suite}
+
+Source: the BANKING77 train split of PolyAI-LDN/task-specific-datasets, 10,003
+customer messages over 77 intents.
+
+\begin{enumerate}
+\item The 77 intents map to six actions: \texttt{fraud}, \texttt{disputes},
+  \texttt{payments}, \texttt{cards}, \texttt{fees}, \texttt{account}. The
+  mapping table and the rationale are in the code.
+\item 300 cases, 50 per action, sampled with a fixed seed.
+\item Each case carries: the message text, the gold action, and a six-entry
+  cost vector following \texttt{cost} in \eqref{eq:cost}.
+\end{enumerate}
+
+\section{Models and method}
+
+Six models, all local, all through Ollama on the pilot machine (Apple M4,
+16 GB RAM):
+
+\begin{tabular}{lrr}
+model & size \\
+\hline
+\texttt{llama3.1:8b} & 4.9 GB \\
+\texttt{qwen2.5-coder:7b} & 4.7 GB \\
+\texttt{qwen2.5:0.5b} & 0.4 GB (pulled) \\
+\texttt{qwen2.5:1.5b} & 1.0 GB (pulled) \\
+\texttt{qwen2.5:3b} & 1.9 GB (pulled) \\
+\end{tabular}
+
+Two routing prompts. \texttt{v1} asks the model to answer with one of the six
+actions. \texttt{v2} adds two rules (choose \texttt{fraud} for missing money
+or a possibly compromised card; choose \texttt{disputes} for refund and
+duplicate complaints) and demands JSON output. Prompt changes are not part of
+the story here: the relevant comparison is the same model with the two
+prompts, to separate prompt sensitivity from model sensitivity.
+
+Decoding: temperature 0, seed 42, the output constrained to the six allowed
+labels. All 1,800 calls parsed to an allowed label.
+
+\section{Runs}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+run & accuracy & \$/1,000 \\
+\midrule
+\texttt{llama3.1:8b} v1 & 66.0\% & 14,473 \\
+\texttt{llama3.1:8b} v2 & 66.3\% & 14,480 \\
+\texttt{qwen2.5:0.5b} v1 & 30.3\% & 27,607 \\
+\texttt{qwen2.5:1.5b} v1 & 61.0\% & 16,643 \\
+\texttt{qwen2.5:1.5b} v2 & 62.3\% & 16,683 \\
+\texttt{qwen2.5:3b} v1 & 59.3\% & 17,500 \\
+\texttt{qwen2.5-coder:7b} v1 & 67.0\% & 13,977 \\
+\bottomrule
+\end{tabular}
+\caption{Accuracy and expected cost per 1,000 decisions per run.}
+\end{table}
+
+\section{Upgrades}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lllllll}
+\toprule
+pair & acc $\Delta$ & churn & regressions & cost-weighted churn & loss (\$/1,000) & $p$ \\
+\midrule
+\texttt{llama3.1:8b} v1 $\to$ v2 (prompt change) & +0.3pp & 12.3\% [9.1, 16.5] & 4.7\% & 6.2\% & +7 & 1.00 \\
+\texttt{llama3.1:8b} v1 $\to$ \texttt{qwen2.5:0.5b} v1 & $-35.7$pp & 71.7\% [66.3, 76.5] & 44.0\% & 47.6\% & +13,133 & $\sim 0$ \\
+\texttt{llama3.1:8b} v1 $\to$ \texttt{qwen2.5:1.5b} v1 & $-5.0$pp & 26.7\% [22.0, 31.9] & 11.0\% & 17.8\% & +2,170 & 0.049 \\
+\texttt{qwen2.5:1.5b} v1 $\to$ \texttt{qwen2.5:3b} v1 & $-1.7$pp & 19.7\% [15.6, 24.5] & 6.7\% & 12.5\% & +857 & 0.50 \\
+\texttt{llama3.1:8b} v1 $\to$ \texttt{qwen2.5-coder:7b} v1 & +1.0pp & 18.7\% [14.7, 23.5] & 5.7\% & 10.1\% & -497 & 0.74 \\
+\bottomrule
+\end{tabular}
+\caption{Upgrade pairs: accuracy delta, churn with 95\% Wilson intervals,
+regressions and improvements among changed decisions, cost-weighted churn,
+decision loss, and exact-McNemar tests on the accuracy discordance.
+
+What to read in this table.
+
+The first row is the control: the same model, a new prompt, no accuracy
+change, 12.3\% of decisions changed, and the accuracy test says it is noise
+($p = 1.00$). Churn is present.
+
+\texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} is the quiet one: accuracy moves
+by less than 2 points and is not significant ($p = 0.50$), while 19.7\% of
+decisions change and 6.7\% of changed decisions are wrong both ways. A team
+comparing these two models by accuracy would see no upgrade.
+
+\texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b} is the loud one in the other
+direction: accuracy rises by 30.7 points and 71.7\% of decisions change. The
+cost of that is not obvious from the accuracy line; the table shows the
+changed population is a quarter-to-half expensive: 47.6\% of the exposure
+carried by changed decisions.
+
+The cost-weighted churn is lower than raw churn because it is relative to
+total exposure; on the \texttt{0.5B} pair, the moved-case value is around
+\$13,000 per 1,000 decisions if every moved decision costs as much as the
+reached \texttt{1.5B}'s wrong decisions do, which the table's \$27,607/\$16,643
+figures bracket.
+
+\section{Limitations}
+
+The suite is intent routing, not enterprise policy. The actions and the cost
+table are a stated assumption, not measured ground truth. 300 cases is small;
+the largest-$p$ row here is \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} at
+$p = 0.50$, where conclusions from the churn number should be tentative.
+
+Churn and regressions are the statistically cleaner outcomes: they do not
+depend on the gold labels beyond correctness. They are what you want for a
+gate before a model goes into service.
+
+\section{Conclusion}
+
+The metric is:
+
+\begin{enumerate}
+\item of all decisions, how many changed ($p$ churn);
+\item of those, how many went the wrong way ($p$ regressions);
+\item how much the moved decisions cost, relative to the suite's total cost
+  exposure;
+\item the dollar change per 1,000 decisions.
+\end{enumerate}
+
+Report them together. One number, ``did the upgrade change decisions?,''
+replaces accuracy when the question is whether to ship.
+
+\section*{Acknowledgments}
+Experiments in this work were run and tracked with OpenResearch.
+
+\begin{thebibliography}{9}
+\bibitem{banking77}
+PolyAI-LDN. \textit{task-specific-datasets: BANKING77 train split}.
+\url{https://github.com/PolyAI-LDN/task-specific-datasets}.
+\end{thebibliography}
+
+\end{document}
