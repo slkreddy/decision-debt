@@ -265,9 +265,9 @@ The suite, the runs, and the analysis live in \texttt{out/}; the harness in
 
 The suite is intent routing, not enterprise policy. The actions and the cost
 table are a stated assumption, not measured ground truth. 300 cases is small;
-the weakest accuracy rows are the prompt change ($p = 1.00$) and the 1.5B to
-3B upgrade ($p = 0.50$), and conclusions from the churn number on those rows
-should be tentative.
+the accuracy changes with the largest $p$ are the prompt change ($p = 1.00$),
+the comparison to \texttt{qwen2.5-coder:7b} ($p = 0.74$), and the 1.5B to 3B
+upgrade ($p = 0.50$); where churn is involved, conclusions should be tentative.
 
 The fraud study uses the same 300-case suite; its labels are the gold
 actions (50 fraud of 300) and it does not use the cost model, since it
