@@ -1,0 +1,35 @@
+note: Running TeX ...
+error: paper.tex:76: Undefined control sequence
+error: something bad happened inside XeTeX; its output follows:
+
+===============================================================================
+(paper.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(size11.clo)) (geometry.sty (keyval.sty) (ifvtex.sty (iftex.sty))) (amsmath.sty
+For additional information on amsmath, use the `?' option.
+(amstext.sty (amsgen.sty)) (amsbsy.sty) (amsopn.sty)) (amssymb.sty
+(amsfonts.sty)) (booktabs.sty) (hyperref.sty (ltxcmds.sty) (pdftexcmds.sty
+(infwarerr.sty)) (kvsetkeys.sty) (kvdefinekeys.sty) (pdfescape.sty)
+(hycolor.sty) (letltxmacro.sty) (auxhook.sty) (kvoptions.sty) (pd1enc.def)
+(intcalc.sty) (etexcmds.sty) (puenc.def) (url.sty) (bitset.sty (bigintcalc.sty)
+) (atbegshi-ltx.sty)) (hxetex.def (stringenc.sty) (rerunfilecheck.sty
+(atveryend-ltx.sty) (uniquecounter.sty))) (l3backend-xetex.def)
+No file paper.aux.
+(ts1cmr.fd)
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+(nameref.sty (refcount.sty) (gettitlestring.sty))
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+(umsa.fd) (umsb.fd) [1]
+! Undefined control sequence.
+l.76   \citep
+             {api_migration_regressions} measures per-item changes across
+Output written on paper.xdv (1 page, 24680 bytes).
+Transcript written on paper.log.
+===============================================================================
+error: the XeTeX engine had an unrecoverable error
+caused by: halted on potentially-recoverable error as specified

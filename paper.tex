@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,booktabs}
+\usepackage{natbib}
 \usepackage[hidelinks]{hyperref}
 
 \title{Decision Debt: A Number for Silent Decision Change Across Model Upgrades}
@@ -12,8 +13,8 @@
 
 \begin{abstract}
 An upgrade is judged by the headline number: accuracy on a fixed suite. We
-built the number that accuracy hides: how much the model changes decisions,
-and how much of that change is a regression.
+built the number that accuracy hides: \textbf{decision debt}, how much the
+model changes decisions, and how much of that change is a regression.
 
 We route 300 cases from the BANKING77 intent set to six actions. Each case
 carries an expected cost if the wrong action is chosen. We run five models
@@ -65,6 +66,34 @@ The MCNemar test applies to the accuracy side, not the decision side. On the
 upgrades below, it reports whether the accuracy change is distinguishable
 from noise. Decisions are flows, not states, so the flow rates need their
 own statistics: Wilson intervals on churn and regressions.
+
+\section{Related work}
+
+Upgrades are usually read through aggregate benchmarks. A few works have
+turned to item-level and cost-weighted views.
+
+\begin{itemize}
+\item \textbf{Item-level regressions in API migrations.}
+  \citep{api_migration_regressions} measures per-item changes across
+  commercial API upgrades, classifying items as reliably improved, reliably
+  regressed, or practically equivalent. Our unit is the business decision: a
+  decision changes when the predicted action differs between two deployed
+  models.
+\item \textbf{Migration benchmarks.} \citep{upgradebench} is a
+  decision-centric benchmark over migration choices for fine-tuned
+  specialists; it measures migration decisions, not decision change between
+  deployed models.
+\item \textbf{Cost-aware abstention.} \citep{cost_aware_abstention} measures
+  when to defer in IT ticket classification; the cost model we use measures
+  the cost of decisions that change.
+\item \textbf{Decision-model benchmarks.} \citep{general_decision_models}
+  and \citep{decision_models_triage} benchmark decision models on triage
+  accuracy, calibration, and out-of-scope detection.
+\end{itemize}
+
+None of these defines decision debt: the churn of decisions between two
+versions, the regressions, and a cost-weighted version, with an operational
+upgrade-gate framing.
 
 \section{The cost model}
 
@@ -280,7 +309,7 @@ gate before a model goes into service.
 
 \section{Conclusion}
 
-The metric is:
+The metric is decision debt, the combination of:
 
 \begin{enumerate}
 \item of all decisions, how many changed ($p$ churn);
@@ -291,11 +320,39 @@ The metric is:
 \end{enumerate}
 
 Report them together. One number, ``did the upgrade change decisions?,''
-replaces accuracy when the question is whether to ship.
+replaces accuracy when the question is whether to ship. The four numbers are
+the decision debt of the upgrade.
 
 \begin{thebibliography}{9}
-\bibitem{banking77}
-PolyAI-LDN. \textit{task-specific-datasets: BANKING77 train split}.
+\bibitem[Xu and Wu, 2026]{api_migration_regressions}
+Xiaonan Xu and Wenjing Wu. What aggregate scores miss: measuring item-level
+regressions in commercial LLM API migrations.
+\url{https://www.alphaxiv.org/abs/2608.17719}.
+
+\bibitem[Chen and Zhang, 2026]{upgradebench}
+Ye Chen and Weining Zhang. UpgradeBench: A decision-centric benchmark for
+upgrading fine-tuned LLM specialists.
+\url{https://www.alphaxiv.org/abs/2608.20918}.
+
+\bibitem[Gupta, 2026]{cost_aware_abstention}
+Sachin Gupta. Cost-aware abstention for LLM-based IT ticket classification.
+\url{https://www.alphaxiv.org/abs/2610.31657}.
+
+\bibitem[Duan et al., 2026]{general_decision_models}
+Feiyu Duan, Jiayu Lin, Jia Wang, Jun Xiang, Jialiang Wu, Xinnong Zhang,
+Hanqi Yan, Siyuan Wang, and Zhongyu Wei. General decision models:
+benchmarking and insights beyond Jev.
+\url{https://www.alphaxiv.org/abs/2610.03935}.
+
+\bibitem[Roumeliotis et al., 2026]{decision_models_triage}
+Konstantinos I. Roumeliotis, Dionisis Margaris, Dimitris Spiliotopoulos, and
+Nikolaos D. Tselikas. Decision models for business customer-service triage:
+accuracy, calibration, out-of-scope detection and cost of Jev, Clef and
+Perplexity Decider.
+\url{https://www.alphaxiv.org/abs/2611.customer-service-triage-decision-models}.
+
+\bibitem[Banking77, 2026]{banking77}
+PolyAI-LDN. task-specific-datasets: BANKING77 train split.
 \url{https://github.com/PolyAI-LDN/task-specific-datasets}.
 \end{thebibliography}
 
