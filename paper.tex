@@ -16,7 +16,7 @@ built the number that accuracy hides: how much the model changes decisions,
 and how much of that change is a regression.
 
 We route 300 cases from the BANKING77 intent set to six actions. Each case
-carries an expected cost if the wrong action is chosen. We run six models
+carries an expected cost if the wrong action is chosen. We run five models
 locally, on two routing prompts, and compare them on accuracy and on
 decision change.
 
@@ -124,7 +124,7 @@ customer messages over 77 intents.
 
 \section{Models and method}
 
-Six models, all local, all through Ollama on the local machine (Apple M4,
+Five models, all local, all through Ollama on the local machine (Apple M4,
 16 GB RAM):
 
 \begin{tabular}{lrr}
@@ -139,13 +139,14 @@ model & size \\
 
 Two routing prompts. \texttt{v1} asks the model to answer with one of the six
 actions. \texttt{v2} adds two rules (choose \texttt{fraud} for missing money
-or a possibly compromised card; choose \texttt{disputes} for refund and
-duplicate complaints) and demands JSON output. Prompt changes are not part of
+or a possibly compromised card; choose \texttt{disputes} for money-back
+requests) and demands JSON output. Prompt changes are not part of
 the story here: the relevant comparison is the same model with the two
 prompts, to separate prompt sensitivity from model sensitivity.
 
 Decoding: temperature 0, seed 42, the output constrained to the six allowed
-labels. All 1,800 calls parsed to an allowed label.
+labels. Of the 2,100 decision calls, five returned no parseable label
+(answers like ``disposables'' or ``balances'') and were counted as wrong.
 
 \section{Runs}
 
