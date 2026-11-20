@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,hyperref[hidelinks]}
+\usepackage{amsmath,amssymb,booktabs}
+\usepackage[hidelinks]{hyperref}
 
 \title{Decision Debt: A Number for Silent Decision Change Across Model Upgrades}
 \date{2026}
@@ -181,7 +182,8 @@ pair & acc $\Delta$ & churn & regressions & cost-weighted churn & loss (\$/1,000
 \end{tabular}
 \caption{Upgrade pairs: accuracy delta, churn with 95\% Wilson intervals,
 regressions and improvements among changed decisions, cost-weighted churn,
-decision loss, and exact-McNemar tests on the accuracy discordance.
+decision loss, and exact-McNemar tests on the accuracy discordance.}
+\end{table}
 
 What to read in this table.
 
@@ -201,10 +203,8 @@ changed population is a quarter-to-half expensive: 47.6\% of the exposure
 carried by changed decisions.
 
 The cost-weighted churn is lower than raw churn because it is relative to
-total exposure; on the \texttt{0.5B} pair, the moved-case value is around
-\$13,000 per 1,000 decisions if every moved decision costs as much as the
-reached \texttt{1.5B}'s wrong decisions do, which the table's \$27,607/\$16,643
-figures bracket.
+total exposure. The ledger behind it: \texttt{qwen2.5:0.5b} is at \$27,607
+per 1,000 decisions, \texttt{qwen2.5:1.5b} at \$16,643.
 
 \section{Limitations}
 

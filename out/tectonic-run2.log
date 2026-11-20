@@ -1,0 +1,61 @@
+note: Running TeX ...
+warning: paper.tex:185: Overfull \hbox (178.08849pt too wide) in paragraph at lines 172--185
+warning: paper.tex:241: Underfull \hbox (badness 7133) in paragraph at lines 239--241
+error: paper.tex:243: LaTeX Error: \begin{table} on input line 170 ended by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help
+error: something bad happened inside XeTeX; its output follows:
+
+===============================================================================
+(paper.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(size11.clo)) (geometry.sty (keyval.sty) (ifvtex.sty (iftex.sty))) (amsmath.sty
+For additional information on amsmath, use the `?' option.
+(amstext.sty (amsgen.sty)) (amsbsy.sty) (amsopn.sty)) (amssymb.sty
+(amsfonts.sty)) (booktabs.sty) (hyperref.sty (ltxcmds.sty) (pdftexcmds.sty
+(infwarerr.sty)) (kvsetkeys.sty) (kvdefinekeys.sty) (pdfescape.sty)
+(hycolor.sty) (letltxmacro.sty) (auxhook.sty) (kvoptions.sty) (pd1enc.def)
+(intcalc.sty) (etexcmds.sty) (puenc.def) (url.sty) (bitset.sty (bigintcalc.sty)
+) (atbegshi-ltx.sty)) (hxetex.def (stringenc.sty) (rerunfilecheck.sty
+(atveryend-ltx.sty) (uniquecounter.sty))) (l3backend-xetex.def)
+No file paper.aux.
+(ts1cmr.fd)
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+(nameref.sty (refcount.sty) (gettitlestring.sty))
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+(umsa.fd) (umsb.fd)
+
+LaTeX Warning: No \author given.
+
+[1]
+
+LaTeX Warning: Reference `eq:cost' on page 2 undefined on input line 120.
+
+[2]
+Overfull \hbox (178.08849pt too wide) in paragraph at lines 172--185
+ [][] 
+
+Underfull \hbox (badness 7133) in paragraph at lines 239--241
+[]\TU/lmr/m/n/10.95 PolyAI-LDN. \TU/lmr/m/it/10.95 task-specific-datasets: BANK
+ING77 train split\TU/lmr/m/n/10.95 . []$[][][][][] [] [] [] [][][][][][] [] [][
+][] []
+
+! LaTeX Error: \begin{table} on input line 170 ended by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.243 \end{document}
+                    
+Output written on paper.xdv (2 pages, 41424 bytes).
+Transcript written on paper.log.
+===============================================================================
+error: the XeTeX engine had an unrecoverable error
+caused by: halted on potentially-recoverable error as specified
