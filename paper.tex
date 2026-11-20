@@ -23,10 +23,10 @@ Two results:
 
 \begin{enumerate}
 \item \texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b}: accuracy \textbf{30.3\% to 61.0\%}
-  (a 30.7-point gain) while \textbf{71.7\%} of decisions change.
+  (a 30.7-point gain) while \textbf{70.0\%} of decisions change.
 \item \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b}: accuracy \textbf{61.0\% to 59.3\%}
   (not significant, $p=0.50$) while \textbf{19.7\%} of decisions still change,
-  6.7\% of them wrong on both sides.
+  with 6.7\% regressions and 5.0\% improvements.
 \end{enumerate}
 
 For the second model pair, the interesting cases are the ones where the
@@ -255,8 +255,9 @@ stable fraud source.
 
 The suite is intent routing, not enterprise policy. The actions and the cost
 table are a stated assumption, not measured ground truth. 300 cases is small;
-the largest-$p$ row here is \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} at
-$p = 0.50$, where conclusions from the churn number should be tentative.
+the weakest accuracy rows are the prompt change ($p = 1.00$) and the 1.5B to
+3B upgrade ($p = 0.50$), and conclusions from the churn number on those rows
+should be tentative.
 
 The fraud study uses the same 300-case suite; its labels are the gold
 actions (50 fraud of 300) and it does not use the cost model, since it
