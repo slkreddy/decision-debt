@@ -170,20 +170,18 @@ run & accuracy & \$/1,000 \\
 
 \begin{table}[h]
 \centering
-\begin{tabular}{lllllll}
+\begin{tabular}{llllll}
 \toprule
-pair & acc $\Delta$ & churn & regressions & cost-weighted churn & loss (\$/1,000) & $p$ \\
+pair & acc $\Delta$ & churn & regressions & cw churn & $p$ \\
 \midrule
-\texttt{llama3.1:8b} v1 $\to$ v2 (prompt change) & +0.3pp & 12.3\% [9.1, 16.5] & 4.7\% & 6.2\% & +7 & 1.00 \\
-\texttt{llama3.1:8b} v1 $\to$ \texttt{qwen2.5:0.5b} v1 & $-35.7$pp & 71.7\% [66.3, 76.5] & 44.0\% & 47.6\% & +13,133 & $\sim 0$ \\
-\texttt{llama3.1:8b} v1 $\to$ \texttt{qwen2.5:1.5b} v1 & $-5.0$pp & 26.7\% [22.0, 31.9] & 11.0\% & 17.8\% & +2,170 & 0.049 \\
-\texttt{qwen2.5:1.5b} v1 $\to$ \texttt{qwen2.5:3b} v1 & $-1.7$pp & 19.7\% [15.6, 24.5] & 6.7\% & 12.5\% & +857 & 0.50 \\
-\texttt{llama3.1:8b} v1 $\to$ \texttt{qwen2.5-coder:7b} v1 & +1.0pp & 18.7\% [14.7, 23.5] & 5.7\% & 10.1\% & -497 & 0.74 \\
+llama3.1:8b v1→v2 (prompt) & +0.3pp & 12.3\% [9.1, 16.5] & 4.7\% & 6.2\% & 1.00 \\
+llama3.1:8b → 0.5b & $-35.7$pp & 71.7\% [66.3, 76.5] & 44.0\% & 47.6\% & $\sim 0$ \\
+llama3.1:8b → 1.5b & $-5.0$pp & 26.7\% [22.0, 31.9] & 11.0\% & 17.8\% & 0.049 \\
+1.5b → 3b & $-1.7$pp & 19.7\% [15.6, 24.5] & 6.7\% & 12.5\% & 0.50 \\
+llama3.1:8b → coder & +1.0pp & 18.7\% [14.7, 23.5] & 5.7\% & 10.1\% & 0.74 \\
 \bottomrule
 \end{tabular}
-\caption{Upgrade pairs: accuracy delta, churn with 95\% Wilson intervals,
-regressions and improvements among changed decisions, cost-weighted churn,
-decision loss, and exact-McNemar tests on the accuracy discordance.}
+\caption{Upgrade pairs: accuracy change, churn, regressions, cw churn.}
 \end{table}
 
 What to read in this table.
@@ -194,18 +192,14 @@ change, 12.3\% of decisions changed, and the accuracy test says it is noise
 
 \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} is the quiet one: accuracy moves
 by less than 2 points and is not significant ($p = 0.50$), while 19.7\% of
-decisions change and 6.7\% of changed decisions are wrong both ways. A team
-comparing these two models by accuracy would see no upgrade.
+decisions change, with 6.7\% of them now wrong. A team comparing these two
+models by accuracy would see no upgrade.
 
-\texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b} is the loud one in the other
-direction: accuracy rises by 30.7 points and 71.7\% of decisions change. The
-cost of that is not obvious from the accuracy line; the table shows the
-changed population is a quarter-to-half expensive: 47.6\% of the exposure
-carried by changed decisions.
-
-The cost-weighted churn is lower than raw churn because it is relative to
-total exposure. The ledger behind it: \texttt{qwen2.5:0.5b} is at \$27,607
-per 1,000 decisions, \texttt{qwen2.5:1.5b} at \$16,643.
+\texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b} is the loud one: accuracy rises
+by 30.7 points and 70.0\% of decisions change. Of the changed decisions,
+8.7\% went the wrong way and 39.3\% became correct where they were wrong.
+The ledger is \texttt{qwen2.5:0.5b} at \$27,607 per 1,000 decisions,
+\texttt{qwen2.5:1.5b} at \$16,643.
 
 \section{The fraud-detection agent}
 
