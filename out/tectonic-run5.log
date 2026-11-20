@@ -1,0 +1,10 @@
+note: Running TeX ...
+warning: paper.tex:186: Overfull \hbox (178.08849pt too wide) in paragraph at lines 173--186
+warning: paper.tex:293: Underfull \hbox (badness 7133) in paragraph at lines 291--293
+note: Rerunning TeX because "paper.aux" changed ...
+warning: paper.tex:186: Overfull \hbox (178.08849pt too wide) in paragraph at lines 173--186
+warning: paper.tex:293: Underfull \hbox (badness 7133) in paragraph at lines 291--293
+warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
+note: Running xdvipdfmx ...
+note: Writing `paper.pdf` (51.681640625 KiB)
+note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)

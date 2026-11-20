@@ -33,6 +33,7 @@ For the second model pair, the interesting cases are the ones where the
 changed decisions go the wrong way. A team comparing those two models would
 report an upgrade that changed nothing. We report churn and regressions as
 first-class numbers, weighted by the cost they cause, per 1,000 decisions.
+A fraud-detection agent built the same way is scored separately on the suite.
 \end{abstract}
 
 \section{Why accuracy is the wrong summary for an upgrade}
@@ -206,12 +207,62 @@ The cost-weighted churn is lower than raw churn because it is relative to
 total exposure. The ledger behind it: \texttt{qwen2.5:0.5b} is at \$27,607
 per 1,000 decisions, \texttt{qwen2.5:1.5b} at \$16,643.
 
+\section{The fraud-detection agent}
+
+The same suite, asked a different question: build a local fraud-detection
+agent that answers \texttt{fraud} or \texttt{not\_fraud} per message, and score
+it on the suite. Gold is the suite's gold action (50 fraud cases of 300);
+the raw runs are in \texttt{out/fraud/}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+model & fraud accuracy (300) & parse fails \\
+\midrule
+\texttt{llama3.1:8b} & 85.3\% & 0 \\
+\texttt{qwen2.5:0.5b} & 29.7\% & 0 \\
+\texttt{qwen2.5:1.5b} & 80.7\% & 0 \\
+\texttt{qwen2.5:3b} & 84.0\% & 0 \\
+\texttt{qwen2.5-coder:7b} & 89.0\% & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Fraud-detection accuracy of the agent, scored on all 300 cases.}
+\end{table}
+
+Stability of the fraud answer across models, churn against
+\texttt{llama3.1:8b}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+model & churn of the fraud answer \\
+\midrule
+\texttt{qwen2.5:0.5b} & 71.7\% \\
+\texttt{qwen2.5:1.5b} & 15.3\% \\
+\texttt{qwen2.5:3b} & 7.3\% \\
+\texttt{qwen2.5-coder:7b} & 9.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Reading: the 8B-class models answer fraud correctly on about 85--89\% of the
+fraud cases, and the fraud answer is stable between them (7--9\%). The 0.5B
+model is at 29.7\% and flips the fraud answer in 72\% of cases -- the same
+small-model pattern as the decision study: a model with bad accuracy also
+has a fraud answer that hardly anyone can trust.
+
 \section{Limitations}
 
 The suite is intent routing, not enterprise policy. The actions and the cost
 table are a stated assumption, not measured ground truth. 300 cases is small;
 the largest-$p$ row here is \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} at
 $p = 0.50$, where conclusions from the churn number should be tentative.
+
+The fraud study uses the same 300-case suite; its labels are the gold
+actions (50 fraud of 300) and it does not use the cost model, since it
+measures detection accuracy rather than decision damage.
 
 Churn and regressions are the statistically cleaner outcomes: they do not
 depend on the gold labels beyond correctness. They are what you want for a
