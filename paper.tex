@@ -139,22 +139,21 @@ data and the numbers as a parameterization, not as ground truth.
 
 \section{The suite}
 
-Source: the BANKING77 train split of PolyAI-LDN/task-specific-datasets, 10,003
-customer messages over 77 intents.
+Source: the public BANKING77 intent dataset — the train split of
+PolyAI-LDN/task-specific-datasets, 10,003 customer messages over 77 intents.
 
 \begin{enumerate}
 \item The 77 intents map to six actions: \texttt{fraud}, \texttt{disputes},
   \texttt{payments}, \texttt{cards}, \texttt{fees}, \texttt{account}. The
   mapping table and the rationale are in the code.
-\item 300 cases, 50 per action, sampled with a fixed seed.
+\item 300 cases, 50 per action, sampled with the fixed seed 7.
 \item Each case carries: the message text, the gold action, and a six-entry
   cost vector following \texttt{cost} in \eqref{eq:cost}.
 \end{enumerate}
 
 \section{Models and method}
 
-Five models, all local, all through Ollama on the local machine (Apple M4,
-16 GB RAM):
+Five models, all local, all through Ollama:
 
 \begin{tabular}{lrr}
 model & size \\
