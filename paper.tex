@@ -65,7 +65,7 @@ report.
 The MCNemar test applies to the accuracy side, not the decision side. On the
 upgrades below, it reports whether the accuracy change is distinguishable
 from noise. Decisions are flows, not states, so the flow rates need their
-own statistics: Wilson intervals on churn and regressions.
+own statistics: Wilson intervals on churn, regressions, and improvements.
 
 \section{Related work}
 
@@ -205,16 +205,16 @@ run & accuracy & \$/1,000 \\
 \centering
 \begin{tabular}{llllll}
 \toprule
-pair & acc $\Delta$ & churn & regressions & cw churn & $p$ \\
+pair & acc $\Delta$ & churn [CI] & reg [CI] & cw & $p$ \\
 \midrule
-llama3.1:8b v1→v2 (prompt) & +0.3pp & 12.3\% [9.1, 16.5] & 4.7\% & 6.2\% & 1.00 \\
-llama3.1:8b → 0.5b & $-35.7$pp & 71.7\% [66.3, 76.5] & 44.0\% & 47.6\% & $\sim 0$ \\
-llama3.1:8b → 1.5b & $-5.0$pp & 26.7\% [22.0, 31.9] & 11.0\% & 17.8\% & 0.049 \\
-1.5b → 3b & $-1.7$pp & 19.7\% [15.6, 24.5] & 6.7\% & 12.5\% & 0.50 \\
-llama3.1:8b → coder & +1.0pp & 18.7\% [14.7, 23.5] & 5.7\% & 10.1\% & 0.74 \\
+llama3.1:8b v1→v2 (prompt) & +0.3pp & 12.3\% [9.1, 16.5] & 4.7\% [2.8, 7.7] & 6.2\% & 1.00 \\
+llama3.1:8b → 0.5b & $-35.7$pp & 71.7\% [66.3, 76.5] & 44.0\% [38.5, 49.7] & 47.6\% & $\sim 0$ \\
+llama3.1:8b → 1.5b & $-5.0$pp & 26.7\% [22.0, 31.9] & 11.0\% [7.9, 15.0] & 17.8\% & 0.049 \\
+1.5b → 3b & $-1.7$pp & 19.7\% [15.6, 24.5] & 6.7\% [4.4, 10.1] & 12.5\% & 0.50 \\
+llama3.1:8b → coder & +1.0pp & 18.7\% [14.7, 23.5] & 5.7\% [3.6, 8.9] & 10.1\% & 0.74 \\
 \bottomrule
 \end{tabular}
-\caption{Upgrade pairs: accuracy change, churn, regressions, cw churn.}
+\caption{Upgrade pairs: accuracy change, churn, regressions, cw.}
 \end{table}
 
 What to read in this table.
@@ -224,15 +224,16 @@ change, 12.3\% of decisions changed, and the accuracy test says it is noise
 ($p = 1.00$). Churn is present.
 
 \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b} is the quiet one: accuracy moves
-by less than 2 points and is not significant ($p = 0.50$), while 19.7\% of
-decisions change, with 6.7\% regressions and 5.0\% improvements. A team
-comparing these two models by accuracy would see no upgrade.
+by less than 2 points and is not significant ($p = 0.50$), while
+19.7\% [15.6, 24.5] of decisions change, with 6.7\% [4.4, 10.1] regressions
+and 5.0\% [3.1, 8.1] improvements. A team comparing these two models by
+accuracy would see no upgrade.
 
 \texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b} is the loud one: accuracy rises
-by 30.7 points and 70.0\% of decisions change; 8.7\% of decisions go from
-correct to wrong and 39.3\% become correct where they were wrong. The ledger
-is \texttt{qwen2.5:0.5b} at \$27,607 per 1,000 decisions,
-\texttt{qwen2.5:1.5b} at \$16,643.
+by 30.7 points and 70.0\% of decisions change; 8.7\% [6.0, 12.4] of decisions
+go from correct to wrong and 39.3\% [34.0, 45.0] become correct where they
+were wrong. The ledger is \texttt{qwen2.5:0.5b} at \$27,607 per 1,000
+decisions, \texttt{qwen2.5:1.5b} at \$16,643.
 
 \section{The fraud-detection agent}
 
