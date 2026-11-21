@@ -25,7 +25,7 @@ Two results:
 
 \begin{enumerate}
 \item \texttt{qwen2.5:0.5b} to \texttt{qwen2.5:1.5b}: accuracy \textbf{30.3\% to 61.0\%}
-  (a 30.7-point gain) while \textbf{70.0\%} of decisions change.
+  (a 30.7-point gain, $p \approx 0$) while \textbf{70.0\%} of decisions change.
 \item \texttt{qwen2.5:1.5b} to \texttt{qwen2.5:3b}: accuracy \textbf{61.0\% to 59.3\%}
   (not significant, $p=0.50$) while \textbf{19.7\%} of decisions still change,
   with 6.7\% regressions and 5.0\% improvements.
@@ -93,7 +93,10 @@ turned to item-level and cost-weighted views.
 
 None of these defines decision debt: the churn of decisions between two
 versions, the regressions, and a cost-weighted version, with an operational
-upgrade-gate framing.
+upgrade-gate framing. In deployment terms the literature above answers the
+opposite question — "did accuracy change?" — while we measure how much the
+decisions themselves changed, how many of the changed ones went wrong, and
+what that cost.
 
 \section{The cost model}
 
