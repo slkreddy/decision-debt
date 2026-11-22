@@ -1,6 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,booktabs}
+\usepackage{amsmath,amssymb,booktabs,graphicx}
 \usepackage{natbib}
 \usepackage[hidelinks]{hyperref}
 
@@ -140,6 +140,18 @@ to account support costs a human to review it; an account-support case
 forwarded to fraud costs the same team's time. We take the difference as
 data and the numbers as a parameterization, not as ground truth.
 
+The cost matrix as a diagram — \(\text{cost}(t,p)=\text{delay}[t]+\text{handling}[p]\),
+rows the gold action, columns the predicted action, entries USD; zero on the
+diagonal:
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig4_cost_matrix.pdf}
+  \caption{\textbf{The cost model.} Rows are the gold action, columns the
+  predicted action; entries are USD, zero on the diagonal.}
+  \label{fig:cost}
+\end{figure}
+
 \section{The suite}
 
 Source: the public BANKING77 intent dataset — the train split of
@@ -217,6 +229,15 @@ llama3.1:8b → coder & +1.0pp & 18.7\% [14.7, 23.5] & 5.7\% [3.6, 8.9] & 10.1\%
 \caption{Upgrade pairs: accuracy change, churn, regressions, cw.}
 \end{table}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig1_upgrades.pdf}
+  \caption{\textbf{Upgrades move decisions.} Share of the 300 cases whose
+  predicted action differs between the two model versions, with 95\% Wilson
+  intervals; bar labels are the exact counts.}
+  \label{fig:upgrades}
+\end{figure}
+
 What to read in this table.
 
 The first row is the control: the same model, a new prompt, no accuracy
@@ -284,6 +305,24 @@ overall accuracy is only 29.7\%. Against \texttt{llama3.1:8b}, the fraud
 answer churns in 71.7\% of cases from \texttt{qwen2.5:0.5b} and 15.3\% from
 \texttt{qwen2.5:1.5b}: a model can be a better fraud detector and a less
 stable fraud source.
+
+The fraud study, as graphs:
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig2_fraud_accuracy.pdf}
+  \caption{\textbf{Fraud detection: overall and fraud-case accuracy.} Overall
+  accuracy over all 300 cases; fraud-case accuracy over the 50 gold-fraud cases.}
+  \label{fig:fraud_acc}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig3_fraud_churn.pdf}
+  \caption{\textbf{Fraud answer churn.} Share of cases whose fraud answer
+  differs from \texttt{llama3.1:8b}.}
+  \label{fig:fraud_churn}
+\end{figure}
 
 \section{Code and data}
 
