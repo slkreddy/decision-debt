@@ -1,4 +1,4 @@
-# Decision Debt — pilot
+# Decision Debt - pilot
 
 Does a model upgrade silently change business decisions that accuracy says are fine?
 
