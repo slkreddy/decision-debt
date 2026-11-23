@@ -61,14 +61,14 @@
 \begin{document}
 \begin{tikzpicture}[orx]
 
-  \node[data]   (suite)     {300-case suite};
-  \node[block, right=of suite]     (models)    {5 local models};
-  \node[data, right=of models]     (decisions) {Actions per version};
-  \node[ours,  right=of decisions] (debt)      {Decision debt};
+  \node[data]   (suite)  {300 cases};
+  \node[block, right=of suite] (models) {5 models};
+  \node[block, right=of models] (diff)   {Churn + regressions};
+  \node[ours,  right=of diff]    (debt)  {Decision debt};
 
   \draw[flow] (suite) -- (models);
-  \draw[flow] (models) -- node[edgelbl, above] {2 versions} (decisions);
-  \draw[flow] (decisions) -- node[edgelbl, above] {churn + regressions} (debt);
+  \draw[flow] (models) -- (diff);
+  \draw[flow] (diff) -- (debt);
 
 \end{tikzpicture}
 \end{document}

@@ -67,17 +67,17 @@ upgrades below, it reports whether the accuracy change is distinguishable
 from noise. Decisions are flows, not states, so the flow rates need their
 own statistics: Wilson intervals on churn, regressions, and improvements.
 
-Figure~\ref{fig:overview} shows how the audit is wired: the suite feeds the
-models, which produce the actions per version; pairs of versions are compared,
-yielding churn and regressions; costs weight the churn into the decision debt.
+Figure~\ref{fig:overview} shows how the proposal works: the suite of 300 cases
+feeds the five local models; the actions of two versions are compared,
+yielding churn + regressions; the decision debt is the result.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=\linewidth]{figs/architecture.pdf}
-  \caption{\textbf{How the proposal works.} The suite feeds the five local
-  models, which produce the actions per version; pairs of versions are
-  compared, yielding churn and regressions; the decision debt is the result,
-  weighted by the cost model.}
+  \caption{\textbf{How the proposal works.} The suite of 300 cases feeds the
+  five local models; the actions of two versions are compared, yielding
+  churn + regressions; the decision debt is the result, weighted by the cost
+  model.}
   \label{fig:overview}
 \end{figure}
 
