@@ -67,6 +67,19 @@ upgrades below, it reports whether the accuracy change is distinguishable
 from noise. Decisions are flows, not states, so the flow rates need their
 own statistics: Wilson intervals on churn, regressions, and improvements.
 
+Figure~\ref{fig:overview} shows how the audit is wired: the suite feeds the
+models, which produce the actions per version; pairs of versions are compared,
+yielding churn and regressions; costs weight the churn into the decision debt.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{figs/architecture.pdf}
+  \caption{\textbf{How the audit is wired.} The suite feeds the models, which
+  produce the actions per version; pairs of versions are compared, yielding
+  churn and regressions; costs weight the churn into the decision debt.}
+  \label{fig:overview}
+\end{figure}
+
 \section{Related work}
 
 Upgrades are usually read through aggregate benchmarks. A few works have
@@ -139,18 +152,6 @@ The asymmetry is not an option. A disputed charge that the wrong team sends
 to account support costs a human to review it; an account-support case
 forwarded to fraud costs the same team's time. We take the difference as
 data and the numbers as a parameterization, not as ground truth.
-
-The cost matrix as a diagram — \(\text{cost}(t,p)=\text{delay}[t]+\text{handling}[p]\),
-rows the gold action, columns the predicted action, entries USD; zero on the
-diagonal:
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\linewidth]{figs/fig4_cost_matrix.pdf}
-  \caption{\textbf{The cost model.} Rows are the gold action, columns the
-  predicted action; entries are USD, zero on the diagonal.}
-  \label{fig:cost}
-\end{figure}
 
 \section{The suite}
 
