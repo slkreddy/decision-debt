@@ -61,18 +61,14 @@
 \begin{document}
 \begin{tikzpicture}[orx]
 
-  \node[data]                  (suite)     {Suite of\\300 cases};
-  \node[data, below=of suite]  (costs)     {Expected cost per action\\(delay[t] + handling[p])};
-  \node[block, below=of costs] (models)    {Five local models};
-  \node[data, below=of models] (decisions) {Actions per model\\(two versions)};
-  \node[block, below=of decisions] (diff)  {Churn + regressions};
-  \node[ours, below=of diff]   (debt)      {Decision debt};
+  \node[data]   (suite)     {300-case suite};
+  \node[block, right=of suite]     (models)    {5 local models};
+  \node[data, right=of models]     (decisions) {Actions per version};
+  \node[ours,  right=of decisions] (debt)      {Decision debt};
 
   \draw[flow] (suite) -- (models);
-  \draw[flow] (models) -- node[edgelbl, right] {6 actions} (decisions);
-  \draw[flow] (decisions) -- node[edgelbl, right] {pairs} (diff);
-  \draw[flow] (diff) -- (debt);
-  \draw[flow] (costs) -- node[edgelbl, right] {weighted} (debt);
+  \draw[flow] (models) -- node[edgelbl, above] {2 versions} (decisions);
+  \draw[flow] (decisions) -- node[edgelbl, above] {churn + regressions} (debt);
 
 \end{tikzpicture}
 \end{document}
