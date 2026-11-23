@@ -24,8 +24,7 @@ style.save = save_png
 
 import fig1_upgrades
 import fig2_fraud_accuracy
-import fig3_fraud_churn
 import fig4_cost_matrix
 
-for mod in (fig1_upgrades, fig2_fraud_accuracy, fig3_fraud_churn, fig4_cost_matrix):
+for mod in (fig1_upgrades, fig2_fraud_accuracy, fig4_cost_matrix):
     mod.main()
